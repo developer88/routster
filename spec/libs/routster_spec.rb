@@ -16,21 +16,69 @@ RSpec.describe Routster do
 
   describe '#distance_for' do
 
+    let(:lib) { Routster.new(['AB6', 'BC1', 'CA2']) }
+    let(:route) { lib.distance_for('A-B') }
+    let(:unknown_route) { lib.distance_for('D-C') }
+
+    it 'should return distance for the route' do
+      expect(route[:length]).to eq(6)
+    end
+
+    it 'should return distance for the route as Hash' do
+      expect(route.is_a?(Hash)).to be true
+    end
+
+    it 'should return no information about route' do
+      expect(unknown_route[:length]).to be_nil
+    end
+
+    it 'should return status key for unknown route' do
+      expect(unknown_route[:status]).to eq('NO SUCH ROUTE')
+    end
+
   end
 
   describe '#trips' do
 
     context 'calculate in stops' do
 
+      let(:lib) { Routster.new(['AB6', 'BC1', 'CA2']) }
+
+      it 'should return number of trips limited by maximum of stops as array' do
+        expect(lib.trips(starts: 'A', ends: 'C', count: 3, precise: :maximum, kind: :stops).is_a?(Array)).to be true
+      end
+
+      it 'should return number of trips limited by maximum of stops' do
+        expect(lib.trips(starts: 'A', ends: 'C', count: 3, precise: :maximum, kind: :stops).size).to eq(2)
+      end
+
+      it 'should return number of trips limited by exact amount of stops' do
+        expect(lib.trips(starts: 'A', ends: 'C', count: 1, precise: :exactly, kind: :stops).size).to eq(1)
+      end      
+
     end
 
     context 'calculate in distance' do
+
+      it 'should return number of trips limited by distance' do
+        expect(lib.trips(starts: 'A', ends: 'C', count: 8, precise: :less_than, kind: :distance).size).to eq(1)
+      end
 
     end
 
   end
 
   describe '#shortest_route' do
+
+    let(:lib) { Routster.new(['AB6', 'BC1', 'CA2']) }
+
+    it 'should return information about shortest route as Hash' do
+      expect(lib.shortest_route('A-C').is_a?(Hash)).to be true
+    end
+
+    it 'should return information about shortest route as Hash' do
+      expect(lib.shortest_route('A-C')[:length]).to eq(7)
+    end 
 
   end
 
@@ -61,10 +109,6 @@ RSpec.describe Routster do
           expect(result[:length]).to eq(route[1])
         end
       end
-
-    end
-
-    it 'should return values as it mentioned in task description' do
 
     end
 

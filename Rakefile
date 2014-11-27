@@ -8,7 +8,7 @@ namespace :routster do
 		ARGV.shift
 		routster = Routster.new(ARGV.map{|a| a.sub(',','') })
 		puts ""
-		puts "Now Routster has #{routster.routes} routes"
+		puts "Now Routster has #{routster.routes.size} routes"
 		puts "Try to find answers:"
 		# 1
 		['A-B-C', 'A-D', 'A-D-C', 'A-E-B-C-D', 'A-E-D'].each do |route|
