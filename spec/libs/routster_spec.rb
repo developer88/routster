@@ -21,7 +21,7 @@ RSpec.describe Routster do
     let(:unknown_route) { lib.distance_for('D-C') }
 
     it 'should return distance for the route' do
-      expect(route[:length]).to eq(6)
+      expect(route[:length].to_i).to eq(6)
     end
 
     it 'should return distance for the route as Hash' do
@@ -88,27 +88,56 @@ RSpec.describe Routster do
 
     context 'should return values as it mentioned in task description' do
 
-      it 'for distances (from 1 to 5)' do
-        [['A-B-C', 9], ['A-D', 5], ['A-D-C', 13], ['A-E-B-C-D', 22], ['A-E-D', nil]].each do |route|
-          result = lib.distance_for(route[0])
-          expect(result[:length]).to eq(route[1]) 
-          expect(result[:status]).to eq('NO SUCH ROUTE') if route[1].nil?
-        end
+      it '#1 The distance of the route A-B-C' do
+        result = lib.distance_for('A-B-C')
+        expect(result[:length].to_i).to eq(9) 
       end
 
-      it 'for number of trips (from 6 to 7, and for 10)' do
-        [['C', 'C', 3, :maximum, :stops, 2], ['A', 'C', 4, :exactly, :stops, 3], ['C', 'C', 30, :less_than, :distance, 7]].each do |route|
-          result = lib.trips(starts: route[0], ends: route[1], count: route[2], precise: route[3], kind: route[4])
-          expect(result.size).to eq(route[5])
-        end
+      it '#2 The distance of the route A-D' do
+        result = lib.distance_for('A-D')
+        expect(result[:length].to_i).to eq(5) 
       end
 
-      it 'for length of the shortest route (from 8 to 9)' do
-        [ ['A-C', 9], ['B-B', 9] ].each do |route|
-          result = lib.shortest_route(route[0])
-          expect(result[:length]).to eq(route[1])
-        end
+      it '#3 The distance of the route A-D-C' do
+        result = lib.distance_for('A-D-C')
+        expect(result[:length].to_i).to eq(13) 
       end
+
+      it '#4 The distance of the route A-E-B-C-D' do
+        result = lib.distance_for('A-E-B-C-D')
+        expect(result[:length].to_i).to eq(22) 
+      end
+
+      it '#5 The distance of the route A-E-D' do
+        result = lib.distance_for('A-E-D')
+        expect(result[:length]).to eq(nil) 
+        expect(result[:status]).to eq('NO SUCH ROUTE')
+      end
+
+      it '#6 The number of trips starting at C and ending at C with a maximum of 3 stops' do
+        result = lib.trips(starts: 'C', ends: 'C', count: 3, precise: :maximum, kind: :stops)
+        expect(result.size).to eq(2)
+      end
+
+      it '#7 The number of trips starting at A and ending at C with exactly 4 stops' do
+        result = lib.trips(starts: 'A', ends: 'C', count: 4, precise: :exactly, kind: :stops)
+        expect(result.size).to eq(3)
+      end
+
+      it '#8 The length of the shortest route (in terms of distance to travel) from A to C' do
+        result = lib.shortest_route('A-C')
+        expect(result[:length]).to eq(9)
+      end
+
+      it '#9 The length of the shortest route (in terms of distance to travel) from B to B' do
+        result = lib.shortest_route('B-B')
+        expect(result[:length]).to eq(9)
+      end     
+      
+      it '#10 The number of different routes from C to C with a distance of less than 30' do
+        result = lib.trips(starts: 'C', ends: 'C', count: 30, precise: :less_than, kind: :distance)
+        expect(result.size).to eq(7)
+      end   
 
     end
 
