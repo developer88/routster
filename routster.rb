@@ -1,10 +1,4 @@
-require 'time'
-require 'json'
-require 'active_model'
-
 class Routster
-
-	include ActiveModel::Validations
 
 	attr_reader :routes
 
