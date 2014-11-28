@@ -23,15 +23,11 @@ class Routster
 	end
 
 	def trips(*args)
-		#puts args.inspect
-		#puts 
-		routes_finder(args[0][:starts], args[0][:ends]).inspect
-
-		 #find_possible_routes(args[0][:starts], args[0][:ends]).inspect #.map{|r| "#{r[:starts]}#{r[:ends]}"}.inspect
+		routes_finder(args[0][:starts], args[0][:ends], args[0][:precise], args[0][:kind], args[0][:count])
 	end
 
 	def shortest_route(start, stop, print = false)
-		route = routes_finder(start, stop, nil, nil, 'shortest')
+		route = routes_finder(start, stop, nil, nil, nil, 'shortest')
 		puts "The length of the shortest route from to is #{route[:length]}" if print
 		route
 	end
@@ -57,18 +53,21 @@ class Routster
 			result.flatten.compact
 		end
 
-		def routes_finder(start, stop, precise = nil, kind = nil, type = 'normal')
+		def routes_finder(start, stop, precise = nil, kind = nil, count = nil, type = 'normal')
 			raw_routes = find_possible_routes(start, stop)
 			# Now we have array with complete routes and unfinished routes.
 			# Lets convert it to string and calculate overall length and get rid of unfinished routes
 			routes_arr = sort_out_raw_route(raw_routes)
 			routes_arr.map! do |route|
-				{route: route.map{|r| r[:code]}, stops: route.size, length: route.map{|r| r[:length].to_i}.inject{|sum,x| sum + x }}
+				{route: route.map{|r| r[:code]}, stops: route.map{|r| [r[:code][0], r[:code][1]]}.flatten.uniq.size, length: route.map{|r| r[:length].to_i}.inject{|sum,x| sum + x }}
 			end
 			# Now we have beautifull array of hashes with some statistic
 			# We should filter found routes and finally return the results
-			if precise != nil && kind != nil && type == 'normal'
-
+			if precise != nil && kind != nil && type == 'normal' && count > 0
+				field = kind == :distance ? :length : :stops
+				routes_arr.keep_if{|route| route[field] == count } if precise == :exactly
+				routes_arr.keep_if{|route| route[field] <= count } if precise == :maximum
+				routes_arr.keep_if{|route| route[field] < count } if precise == :less_than
 			end
 
 			# Return either fastest route or filtered array as is
