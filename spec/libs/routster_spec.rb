@@ -3,7 +3,7 @@ require './routster'
 
 RSpec.describe Routster do
 
-  describe 'initialization' do
+  describe 'during initialization' do
 
     let(:lib) { Routster.new(['AB6', 'BC1', 'CA2']) }
 
@@ -119,9 +119,9 @@ RSpec.describe Routster do
         expect(result.size).to eq(2)
       end
 
-      it '#7 The number of trips starting at A and ending at C with exactly 4 stops' do
+      it '#7 The number of trips starting at A and ending at C with exactly 4 stops. Attention please!' do
         result = lib.trips(starts: 'A', ends: 'C', count: 4, precise: :exactly, kind: :stops)
-        #expect(result.size).to eq(3)
+        #expect(result.size).to eq(3) # Please see readme file 
         expect(result.size).to eq(1)
       end
 
@@ -135,9 +135,9 @@ RSpec.describe Routster do
         expect(result[:length]).to eq(9)
       end     
       
-      it '#10 The number of different routes from C to C with a distance of less than 30' do
+      it '#10 The number of different routes from C to C with a distance of less than 30. Attention please!' do
         result = lib.trips(starts: 'C', ends: 'C', count: 30, precise: :less_than, kind: :distance)
-        #expect(result.size).to eq(7)
+        #expect(result.size).to eq(7) # Please see readme file 
         expect(result.size).to eq(3)
       end   
 

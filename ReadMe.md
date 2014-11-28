@@ -4,9 +4,9 @@ Simple script to find routes from given input.
 
 # About my code
 
-Unfortunately i did not have time to create a perfect algorithm so my code only find routes without repeating stops e.g ABCDC
+Unfortunately i did not have enough time to create a good algorithm so my code only find routes without repeating stops e.g ABCDC. Maybe i have chosen a wrong way to do that. I do believe that it is possible to create only one method to find all possible routes without filtering (i use 2 methods, one to get hash of all possible routes, second is to get arrays for each routes with all nesessary data).
 
-You can start specs to see the results. I changed results for some tasks (6, 7, 10) because of the reason described above.
+You can run specs to see the results. I changed results for some tasks (6, 7, 10) because of the reason described above.
 
 # Usage
 
@@ -21,7 +21,6 @@ You can start specs to see the results. I changed results for some tasks (6, 7, 
 ## Shortest route
 
     rake routster:shortcut ROUTES=AB5,AB3,BC2,EA2 START=A STOP=C
-
 
 # Testing
 

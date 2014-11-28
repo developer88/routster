@@ -93,9 +93,9 @@ class Routster
 		# for example AD5, CD3, AD1, AD3 etc
 		#
 		# In the result there will be nested hash
-		def find_possible_routes(start, stop, route = {}, routes_arr = @routes.dup)
-			#return route if routes_arr.size == 0
-
+		def find_possible_routes(start, stop, route = {}, routes_arr = @routes.dup, iteration = 0)
+			iteration += 1
+			return route if iteration > 10 # Some ugly hack to limit iterations
 			# Find all routes that starts from 'start' point
 			starts_points = routes_arr.select {|r| r[:starts] == start }
 			# Try to filter all the routes that end with 'stop' point
@@ -108,11 +108,9 @@ class Routster
 
 			# For routes left try to shift start point and start again
 			starts_points.each do |point|	
-			   point_clone = point.dup # duplicate point so we may remove it from original array
-			   #routes_arr.delete(point)
 		       route["#{point[:starts]}#{point[:ends]}#{point[:length]}"] = {} # add this point to route
 		       # start from end point of current route and call self 
-		       find_possible_routes(point_clone[:ends], stop, route["#{point[:starts]}#{point[:ends]}#{point[:length]}"], routes_arr)
+		       find_possible_routes(point[:ends], stop, route["#{point[:starts]}#{point[:ends]}#{point[:length]}"], routes_arr, iteration)
 			end
 			# return what has left
 			route
