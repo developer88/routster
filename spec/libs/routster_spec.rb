@@ -73,11 +73,11 @@ RSpec.describe Routster do
     let(:lib) { Routster.new(['AB6', 'BC1', 'CA2']) }
 
     it 'should return information about shortest route as Hash' do
-      expect(lib.shortest_route('A-C').is_a?(Hash)).to be true
+      expect(lib.shortest_route('A','C').is_a?(Hash)).to be true
     end
 
     it 'should return information about shortest route as Hash' do
-      expect(lib.shortest_route('A-C')[:length]).to eq(7)
+      expect(lib.shortest_route('A','C')[:length]).to eq(7)
     end 
 
   end
@@ -125,12 +125,12 @@ RSpec.describe Routster do
       end
 
       it '#8 The length of the shortest route (in terms of distance to travel) from A to C' do
-        result = lib.shortest_route('A-C')
+        result = lib.shortest_route('A', 'C')
         expect(result[:length]).to eq(9)
       end
 
       it '#9 The length of the shortest route (in terms of distance to travel) from B to B' do
-        result = lib.shortest_route('B-B')
+        result = lib.shortest_route('B', 'B')
         expect(result[:length]).to eq(9)
       end     
       
