@@ -13,6 +13,7 @@ class Routster
 		parse_routes(routes)
 	end
 
+	# Find distance for simple route like A-C
 	def distance_for(route, print = false)
 		stops = parse_stops(route)
 		routes = find_direct_routes(stops)
@@ -22,28 +23,40 @@ class Routster
 		{status: status, length: length}
 	end
 
+	# Find all possible direct trips 
+	#
+	# params:
+	# starts 
+	# ends
+	# precise - can be: :maximum, :exactly, :less_than
+	# kind - filter by :stops or :distance
+	# count - value for filtering
 	def trips(*args)
 		routes_finder(args[0][:starts], args[0][:ends], args[0][:precise], args[0][:kind], args[0][:count])
 	end
 
+	# Find the shortest route between stops
 	def shortest_route(start, stop, print = false)
 		route = routes_finder(start, stop, nil, nil, nil, 'shortest')
-		puts "The length of the shortest route from to is #{route[:length]}" if print
+		puts "The length of the shortest route from #{start} to #{stop} is #{route[:length]}" if print
 		route
 	end
 
 	private 
 
+		# Parse routes from command line and store them in hashes
 		def parse_routes(routes)
 			routes.each do |route|
 				@routes << {code: route, starts: route[0], ends: route[1], length: route[2..route.size].to_i}
 			end
 		end
 
+		# Converts route from command line to stops e.g. A-C to [A, C]
 		def parse_stops(route)
 			route.split('-')
 		end
 
+		# Find simple routes like A-C-D
 		def find_direct_routes(stops)
 			result = []
 			stops.each_with_index do |stop, index|
@@ -53,6 +66,7 @@ class Routster
 			result.flatten.compact
 		end
 
+		# Method to find routes based on sertain params
 		def routes_finder(start, stop, precise = nil, kind = nil, count = nil, type = 'normal')
 			raw_routes = find_possible_routes(start, stop)
 			# Now we have array with complete routes and unfinished routes.
@@ -63,7 +77,7 @@ class Routster
 			end
 			# Now we have beautifull array of hashes with some statistic
 			# We should filter found routes and finally return the results
-			if precise != nil && kind != nil && type == 'normal' && count > 0
+			if !precise.nil? && !kind.nil? && type == 'normal' && !count.nil?
 				field = kind == :distance ? :length : :stops
 				routes_arr.keep_if{|route| route[field] == count } if precise == :exactly
 				routes_arr.keep_if{|route| route[field] <= count } if precise == :maximum
@@ -77,6 +91,8 @@ class Routster
 
 		# I suppose there will not be cases when there will be duplicates routes with different lengths,
 		# for example AD5, CD3, AD1, AD3 etc
+		#
+		# In the result there will be nested hash
 		def find_possible_routes(start, stop, route = {}, routes_arr = @routes.dup)
 			#return route if routes_arr.size == 0
 
@@ -102,6 +118,10 @@ class Routster
 			route
 		end
 
+		# Convert nested hash recursively to arrays and replace string name of the route to its full hash value,
+		# for example AB4 to {code: 'AB4', starts: 'A' ....}
+		#
+		# In the result there will be array
 		def sort_out_raw_route(raw_routes)
 			result = []
 			find_route = ->(route){ @routes.find{|r| r[:code] == route} }
