@@ -12,7 +12,7 @@ You can start specs to see the results. I changed results for some tasks (6, 7, 
 
 ## Distance for
 
-    rake routster:distance ROUTES=AB5,AB3,BC2,EA2 ROUTE=A-C
+    rake routster:distance ROUTES=AC1,CD2,DE1,AD2 ROUTE=A-C-D
 
 ## Trips
 
