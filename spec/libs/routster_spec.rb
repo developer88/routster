@@ -45,15 +45,15 @@ RSpec.describe Routster do
     context 'calculate in stops' do      
 
       it 'should return number of trips limited by maximum of stops as array' do
-        expect(lib.trips(starts: 'A', ends: 'C', count: 2, precise: :maximum, kind: :stops).is_a?(Array)).to be true
+        expect(lib.trips('A', 'C', {count: 2, precise: :maximum, kind: :stops}).is_a?(Array)).to be true
       end
 
       it 'should return number of trips limited by maximum of stops' do
-        expect(lib.trips(starts: 'A', ends: 'C', count: 4, precise: :maximum, kind: :stops).size).to eq(2)
+        expect(lib.trips('A', 'C', {count: 4, precise: :maximum, kind: :stops}).size).to eq(2)
       end
 
       it 'should return number of trips limited by exact amount of stops' do
-        expect(lib.trips(starts: 'A', ends: 'C', count: 3, precise: :exactly, kind: :stops).size).to eq(1)
+        expect(lib.trips('A', 'C', {count: 3, precise: :exactly, kind: :stops}).size).to eq(1)
       end      
 
     end
@@ -61,7 +61,7 @@ RSpec.describe Routster do
     context 'calculate in distance' do
 
       it 'should return number of trips limited by distance' do
-        expect(lib.trips(starts: 'A', ends: 'C', count: 8, precise: :less_than, kind: :distance).size).to eq(1)
+        expect(lib.trips('A', 'C', {count: 8, precise: :less_than, kind: :distance}).size).to eq(1)
       end
 
     end
@@ -115,12 +115,12 @@ RSpec.describe Routster do
       end
 
       it '#6 The number of trips starting at C and ending at C with a maximum of 3 stops' do
-        result = lib.trips(starts: 'C', ends: 'C', count: 3, precise: :maximum, kind: :stops)
+        result = lib.trips('C', 'C', {count: 3, precise: :maximum, kind: :stops})
         expect(result.size).to eq(2)
-      end
+      end 
 
       it '#7 The number of trips starting at A and ending at C with exactly 4 stops. Attention please!' do
-        result = lib.trips(starts: 'A', ends: 'C', count: 4, precise: :exactly, kind: :stops)
+        result = lib.trips('A', 'C', {count: 4, precise: :exactly, kind: :stops})
         #expect(result.size).to eq(3) # Please see readme file 
         expect(result.size).to eq(1)
       end
@@ -136,7 +136,7 @@ RSpec.describe Routster do
       end     
       
       it '#10 The number of different routes from C to C with a distance of less than 30. Attention please!' do
-        result = lib.trips(starts: 'C', ends: 'C', count: 30, precise: :less_than, kind: :distance)
+        result = lib.trips('C', 'C', {count: 30, precise: :less_than, kind: :distance})
         #expect(result.size).to eq(7) # Please see readme file 
         expect(result.size).to eq(3)
       end   
